@@ -1,25 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Legend Club</title>
+<title>Legend Login</title>
+
+<style>
+body{
+  margin:0;
+  background:#0f172a;
+  color:white;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.box{
+  background:#1e293b;
+  padding:30px;
+  border-radius:12px;
+  width:300px;
+  text-align:center;
+}
+
+input{
+  width:90%;
+  padding:10px;
+  margin:8px;
+  border:none;
+  border-radius:6px;
+}
+
+button{
+  width:95%;
+  padding:10px;
+  background:#22c55e;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#16a34a;
+}
+</style>
+
 </head>
-<body style="background:black;color:white;text-align:center">
 
-<h1>Legend Club 🎮</h1>
+<body>
 
-<h2>Login</h2>
+<div class="box">
+  <h2>Login System</h2>
 
-<input id="email" placeholder="Email"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+  <button onclick="signup()">Signup</button>
+  <button onclick="login()">Login</button>
 
-<h3>OR</h3>
-<button onclick="googleLogin()">Login with Google</button>
+  <p id="msg"></p>
+</div>
 
 <script>
-async function login(){
-  const res = await fetch("http://localhost:3000/login", {
+async function signup(){
+  const res = await fetch("/signup",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body: JSON.stringify({
@@ -29,11 +73,32 @@ async function login(){
   });
 
   const data = await res.json();
-  alert("Login Success");
+  msg.innerText = data.msg;
+
+  console.log(data.msg);
 }
 
-function googleLogin(){
-  alert("Google login later add karenge");
+async function login(){
+  const res = await fetch("/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  });
+
+  const data = await res.json();
+  msg.innerText = data.msg;
+
+  console.log(data.msg);
+
+  if(data.token){
+    localStorage.setItem("token",data.token);
+    setTimeout(()=>{
+      window.location.href = "/dashboard.html";
+    },1000);
+  }
 }
 </script>
 
